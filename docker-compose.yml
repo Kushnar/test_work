@@ -26,7 +26,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000 && celery -A weather worker -B -l info"
+    command: >
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/weather
     ports:
@@ -34,10 +35,17 @@ services:
     depends_on:
       - db
       - redis
+  celery:
+    build: .
+    command: bash -c "celery -A weather worker -B -l info"
+    depends_on:
+      - redis
+      - db
   flower:
     image: mher/flower:latest
-#    command: ["flower", "--broker=redis://redis/0", "--port=5555"]
+#    command: ["flower", "--broker=redis://0.0.0.0:6379/0", "--port=5555"]
     ports:
       - 5555:5555
     depends_on:
       - redis
+      - web

@@ -1,7 +1,5 @@
 FROM joyzoursky/python-chromedriver:latest
 
-
-
 ENV PYTHONDONTWRIGHTBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
