@@ -1,0 +1,43 @@
+version: '3.7'
+
+volumes:
+  redis_data:
+  pg_data:
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=user_weather
+      - POSTGRES_PASSWORD=user_weather
+      - POSTGRES_DB=db_weather
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/data/postgres_data/
+  redis:
+    image: redis:latest
+    restart: always
+    volumes:
+      - redis_data:/data/redis_data/
+    ports:
+      - 6379:6379
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000 && celery -A weather worker -B -l info"
+    volumes:
+      - .:/usr/src/weather
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+  flower:
+    image: mher/flower:latest
+#    command: ["flower", "--broker=redis://redis/0", "--port=5555"]
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
