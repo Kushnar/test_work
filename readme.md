@@ -17,8 +17,9 @@ process by setting their own time using API endpoints or run that task manually 
 - Selenium==4.8.0
 
 ## API-endpoints
+
 - docs: [http://localhost:8000](http://localhost:8000)
-- (GET) api/weather: get weather list 
+- (GET) api/weather: get weather list
 - (POST) api/weather: run manual updating of weather data (without Post-data)
 - (PUT) api/change-time/ : require hour(s) argument from 0 to 23, to set hour of starting auto-getting weather data
 
@@ -50,3 +51,5 @@ This app requires [Docker](https://www.docker.com/) to run docker container.
    shown as API documentation
 
 
+5. After that you'll be needed to set up superuser via 'python manage.py createsuperuser', you should enter at working
+   container 'weather-web-1' and run that command manually
